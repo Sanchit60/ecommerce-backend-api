@@ -1,4 +1,5 @@
 package com.sanchit.ecommerce_api.controller;
+import com.sanchit.ecommerce_api.util.ApiResponse;
 
 import com.sanchit.ecommerce_api.dto.AuthResponse;
 import com.sanchit.ecommerce_api.dto.LoginRequest;
@@ -16,12 +17,24 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterRequest request) {
+        authService.register(request);
+        ApiResponse<String> response = new ApiResponse<>(
+                "SUCCESS",
+                "User registered successfully",
+                null
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody LoginRequest request) {
+        AuthResponse authResponse = authService.login(request);
+        ApiResponse<AuthResponse> response = new ApiResponse<>(
+                "SUCCESS",
+                "User logged in successfully",
+                authResponse
+        );
+        return ResponseEntity.ok(response);
     }
 }
